@@ -7,10 +7,10 @@
 #define DEFAULT_SIZE 32768              //32KB Arena Default
 
 struct arena{
-    size_t        capacity;
-    size_t        used;
-    struct arena* next;
-    char*         buffer;
+    size_t            capacity;
+    size_t            used;
+    struct arena*     next;
+    unsigned char*    buffer;
 };
 
 #define handle_error(trigger, x, expr)                  \
@@ -55,8 +55,9 @@ void *alloc_on_arena(Arena a, size_t size){
         a -> next = create_arena(a -> capacity);
         return alloc_on_arena(a -> next, size);
     }
+    void* output = a -> buffer + a -> used;
     a -> used += size;
-    return a -> buffer + a ->used - size;
+    return output;
 }
 
 void destroy_arena(Arena a){
